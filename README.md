@@ -29,11 +29,11 @@ npm run build
 - Orders with local create, approve, reject, and status filters
 - Vehicles, drivers, and marketers with local add forms and status controls
 - QR management with scan simulation and downloadable code metadata
-- Mock live tracking with refresh state, reports, and settings
+- Google Maps-ready live tracking with mock-coordinate fallback, reports, and settings
 - Functional module search and local report export to JSON
 - Documented Supabase schema, idempotent seed SQL, browser client configuration, and RLS notes
 - Mobile navigation and responsive layouts
 
-All vehicle positions in Live Tracking are explicitly mock locations, not real GPS tracking.
+Live Tracking can use Google Maps when `VITE_GOOGLE_MAPS_API_KEY` is configured. Vehicle positions remain simulated planning coordinates, not real GPS tracking, until a real GPS provider is connected.
 
 The connected Supabase project is `fleetflow-backend` in Mumbai (`ap-south-1`). See `SUPABASE.md` for schema, RLS, and local environment setup.
