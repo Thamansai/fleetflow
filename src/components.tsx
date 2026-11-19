@@ -1,0 +1,23 @@
+import { ReactNode, useState } from 'react'
+import { Check, ChevronDown, X } from 'lucide-react'
+
+export const toneClass = (value:string) => {
+  const v=value.toLowerCase()
+  if (v.includes('delivered')||v.includes('completed')||v.includes('approved')||v.includes('active')||v.includes('available')||v.includes('verified')||v.includes('received')) return 'badge green'
+  if (v.includes('pending')||v.includes('route')||v.includes('transit')) return 'badge amber'
+  if (v.includes('reject')||v.includes('maintenance')||v.includes('inactive')) return 'badge red'
+  return 'badge blue'
+}
+export function Badge({children}:{children:ReactNode}){ return <span className={toneClass(String(children))}>{children}</span> }
+export function Button({children,variant='primary',className='',type='button',...props}:{children:ReactNode;variant?:'primary'|'secondary'|'ghost'|'danger';className?:string;type?:'button'|'submit'|'reset';[key:string]:any}){ return <button type={type} className={`btn ${variant} ${className}`} {...props}>{children}</button> }
+export function Card({children,className='',...props}:{children:ReactNode;className?:string;[key:string]:any}){ return <section className={`card ${className}`} {...props}>{children}</section> }
+export function SectionHeader({eyebrow,title,subtitle,action}:{eyebrow?:string;title:string;subtitle?:string;action?:ReactNode}){ return <div className="section-header"><div>{eyebrow&&<div className="eyebrow">{eyebrow}</div>}<h2>{title}</h2>{subtitle&&<p>{subtitle}</p>}</div>{action&&<div>{action}</div>}</div> }
+export function StatCard({label,value,trend,icon,accent='blue'}:{label:string;value:string|number;trend?:string;icon:ReactNode;accent?:string}){ return <Card className="stat-card"><div className={`stat-icon ${accent}`}>{icon}</div><div className="stat-copy"><span>{label}</span><strong>{value}</strong>{trend&&<small className={trend.startsWith('-')?'negative':''}>{trend}</small>}</div></Card> }
+export function EmptyState({title,description,action}:{title:string;description:string;action?:ReactNode}){ return <div className="empty"><div className="empty-icon">✦</div><h3>{title}</h3><p>{description}</p>{action}</div> }
+export function Modal({open,title,children,onClose,wide=false}:{open:boolean;title:string;children:ReactNode;onClose:()=>void;wide?:boolean}){ if(!open)return null; return <div className="modal-backdrop" onMouseDown={onClose}><div className={`modal ${wide?'wide':''}`} role="dialog" aria-modal="true" aria-label={title} onMouseDown={e=>e.stopPropagation()}><div className="modal-head"><h3>{title}</h3><button type="button" className="icon-button" aria-label="Close dialog" onClick={onClose}><X size={18}/></button></div>{children}</div></div> }
+export function Field({label,children,hint}:{label:string;children:ReactNode;hint?:string}){return <label className="field"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>}
+export function Select({value,onChange,children}:{value:string;onChange:(v:string)=>void;children:ReactNode}){return <div className="select-wrap"><select value={value} onChange={e=>onChange(e.target.value)}>{children}</select><ChevronDown size={16}/></div>}
+export function Tabs({items,active,onChange}:{items:string[];active:string;onChange:(v:string)=>void}){return <div className="tabs">{items.map(item=><button key={item} className={active===item?'active':''} onClick={()=>onChange(item)}>{item}</button>)}</div>}
+export function Avatar({text,color='blue'}:{text:string;color?:string}){return <div className={`avatar ${color}`}>{text}</div>}
+export function SearchBox({value,onChange,placeholder='Search...'}:{value:string;onChange:(v:string)=>void;placeholder?:string}){return <div className="search-box"><span aria-hidden="true">⌕</span><input aria-label={placeholder} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}/>{value&&<button type="button" aria-label="Clear search" onClick={()=>onChange('')}><X size={14}/></button>}</div>}
+export function ConfirmButton({children,onConfirm,variant='danger'}:{children:ReactNode;onConfirm:()=>void;variant?:'danger'|'secondary'}){const [open,setOpen]=useState(false);return <><Button variant={variant} onClick={()=>setOpen(true)}>{children}</Button><Modal open={open} title="Confirm action" onClose={()=>setOpen(false)}><p className="modal-text">This action changes local mock data. Are you sure you want to continue?</p><div className="modal-actions"><Button variant="secondary" onClick={()=>setOpen(false)}>Cancel</Button><Button variant="danger" onClick={()=>{onConfirm();setOpen(false)}}><Check size={16}/> Confirm</Button></div></Modal></>}
